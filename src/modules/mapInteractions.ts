@@ -1,13 +1,14 @@
 // Map interaction handlers module
 
 import type { Map } from 'mapbox-gl';
+
 import { CONFIG } from './config.js';
-import { state, setActivePopup } from './state.js';
 import { applyMapFilters } from './filters.js';
-import { loadFiltersAndUpdateMap } from './localStorage.js';
-import { loadIcons, addMarkers } from './markers.js';
 import { setupLocationFilters } from './filters.js';
+import { loadFiltersAndUpdateMap } from './localStorage.js';
+import { addMarkers, loadIcons } from './markers.js';
 import { closeItem } from './popups.js';
+import { setActivePopup, state } from './state.js';
 
 // Global declaration for jQuery
 declare global {
@@ -16,7 +17,7 @@ declare global {
   }
 }
 
-const $ = window.$;
+const { $ } = window;
 
 /**
  * Setup map load event handler
@@ -61,42 +62,44 @@ export function setupMapLoadHandler(map: Map): void {
     });
 
     loadFiltersAndUpdateMap();
-    
+
     // Load markers asynchronously for better performance
-    addMarkers(map).then(() => {
-      setupLocationFilters();
-      // Apply filters after markers are fully loaded
-      applyMapFilters();
-    }).catch((error) => {
-      // Handle marker loading error gracefully
-      setupLocationFilters();
-    });
-
-    // Initial animation on load - Start at station, fly to destination
-    setTimeout(() => {
-      const finalZoom = window.matchMedia('(max-width: 479px)').matches ? 16.5 : 17; // Iets meer ingezoomd
-      const stationCoords: [number, number] = [5.975338618538545, 50.89054201081809];
-      const destinationCoords: [number, number] = [5.977246733617121, 50.888996872875126];
-
-      // Start position at station (bird's eye view)
-      map.jumpTo({
-        center: stationCoords,
-        zoom: 14, // Iets meer ingezoomd bij start
-        pitch: 0,
-        bearing: 0,
+    addMarkers(map)
+      .then(() => {
+        setupLocationFilters();
+        // Apply filters after markers are fully loaded
+        applyMapFilters();
+      })
+      .catch((error) => {
+        // Handle marker loading error gracefully
+        setupLocationFilters();
       });
 
-      // Fly to destination with camera rotation (180 degrees rotated)
-      map.flyTo({
-        center: destinationCoords,
-        zoom: finalZoom,
-        pitch: 35, // Lagere pitch voor meer bovenaanzicht
-        bearing: 162.4, // -17.6 + 180 = 162.4
-        duration: 6000,
-        essential: true,
-        easing: (t: number) => t * (2 - t), // Ease out quad
-      });
-    }, 3000); // Start animatie na 3 seconden
+    // Initial animation on load - DISABLED - Moved to Webflow custom code
+    // setTimeout(() => {
+    //   const finalZoom = window.matchMedia('(max-width: 479px)').matches ? 16.5 : 17; // Iets meer ingezoomd
+    //   const stationCoords: [number, number] = [5.975338618538545, 50.89054201081809];
+    //   const destinationCoords: [number, number] = [5.977246733617121, 50.888996872875126];
+
+    //   // Start position at station (bird's eye view)
+    //   map.jumpTo({
+    //     center: stationCoords,
+    //     zoom: 14, // Iets meer ingezoomd bij start
+    //     pitch: 0,
+    //     bearing: 0,
+    //   });
+
+    //   // Fly to destination with camera rotation (180 degrees rotated)
+    //   map.flyTo({
+    //     center: destinationCoords,
+    //     zoom: finalZoom,
+    //     pitch: 35, // Lagere pitch voor meer bovenaanzicht
+    //     bearing: 162.4, // -17.6 + 180 = 162.4
+    //     duration: 6000,
+    //     essential: true,
+    //     easing: (t: number) => t * (2 - t), // Ease out quad
+    //   });
+    // }, 3000); // Start animatie na 3 seconden
   });
 }
 
@@ -134,7 +137,9 @@ export function setupMapInteractionHandlers(map: Map): void {
 
       // Hide popup if visible
       if (state.activePopup) {
-        const popupContent = state.activePopup.getElement().querySelector('.mapboxgl-popup-content') as HTMLElement;
+        const popupContent = state.activePopup
+          .getElement()
+          .querySelector('.mapboxgl-popup-content') as HTMLElement;
         popupContent.style.transition = 'all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
         popupContent.style.transform = 'rotate(-5deg) translateY(40px) scale(0.6)';
         popupContent.style.opacity = '0';
@@ -151,15 +156,15 @@ export function setupMapInteractionHandlers(map: Map): void {
   map.on('click', (e) => {
     // Check if click was on a marker or popup
     const features = map.queryRenderedFeatures(e.point, {
-      layers: ['location-markers']
+      layers: ['location-markers'],
     });
-    
+
     // Only close popup if we didn't click on a marker and popup exists
     if (features.length === 0 && state.activePopup) {
       // Check if the click was inside the popup element
       const popupElement = state.activePopup.getElement();
       const clickTarget = e.originalEvent.target as HTMLElement;
-      
+
       // If click was not inside the popup, close it
       if (!popupElement.contains(clickTarget)) {
         const popupContent = popupElement.querySelector('.mapboxgl-popup-content') as HTMLElement;

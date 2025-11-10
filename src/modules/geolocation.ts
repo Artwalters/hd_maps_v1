@@ -25,28 +25,31 @@ function detectLanguage(): 'nl' | 'en' | 'de' {
 const boundaryTranslations = {
   nl: {
     title: 'Kom naar Heerlen',
-    message: 'Deze functie is alleen beschikbaar binnen de blauwe cirkel op de kaart. Kom naar het centrum van Heerlen om de interactieve kaart te gebruiken!',
+    message:
+      'Deze functie is alleen beschikbaar binnen de blauwe cirkel op de kaart. Kom naar het centrum van Heerlen om de interactieve kaart te gebruiken!',
     locationDenied: 'Locatie toegang geweigerd. Schakel het in bij je instellingen.',
     locationUnavailable: 'Locatie niet beschikbaar. Controleer je apparaat instellingen.',
     locationTimeout: 'Verzoek verlopen. Probeer opnieuw.',
-    locationError: 'Er is een fout opgetreden bij het ophalen van je locatie.'
+    locationError: 'Er is een fout opgetreden bij het ophalen van je locatie.',
   },
   en: {
     title: 'Come to Heerlen',
-    message: 'This feature is only available within the blue circle on the map. Come to the center of Heerlen to use the interactive map!',
+    message:
+      'This feature is only available within the blue circle on the map. Come to the center of Heerlen to use the interactive map!',
     locationDenied: 'Location access denied. Please enable it in your settings.',
     locationUnavailable: 'Location not available. Check your device settings.',
     locationTimeout: 'Request timed out. Please try again.',
-    locationError: 'An error occurred while getting your location.'
+    locationError: 'An error occurred while getting your location.',
   },
   de: {
     title: 'Kommen Sie nach Heerlen',
-    message: 'Diese Funktion ist nur innerhalb des blauen Kreises auf der Karte verfügbar. Kommen Sie ins Zentrum von Heerlen, um die interaktive Karte zu nutzen!',
+    message:
+      'Diese Funktion ist nur innerhalb des blauen Kreises auf der Karte verfügbar. Kommen Sie ins Zentrum von Heerlen, um die interaktive Karte zu nutzen!',
     locationDenied: 'Standortzugriff verweigert. Bitte aktivieren Sie ihn in Ihren Einstellungen.',
     locationUnavailable: 'Standort nicht verfügbar. Überprüfen Sie Ihre Geräteeinstellungen.',
     locationTimeout: 'Anfrage abgelaufen. Bitte versuchen Sie es erneut.',
-    locationError: 'Beim Abrufen Ihres Standorts ist ein Fehler aufgetreten.'
-  }
+    locationError: 'Beim Abrufen Ihres Standorts ist ein Fehler aufgetreten.',
+  },
 };
 
 interface GeolocationPosition {
@@ -77,7 +80,7 @@ export class GeolocationManager {
   private isTracking: boolean;
   private userInitiatedGeolocation: boolean;
   public wasTracking?: boolean;
-  private eventListeners: Array<{element: any, event: string, handler: Function}> = [];
+  private eventListeners: Array<{ element: any; event: string; handler: Function }> = [];
   private timeouts: Set<number> = new Set();
   private boundaryPopup?: HTMLElement;
 
@@ -207,7 +210,9 @@ export class GeolocationManager {
       } else {
         // Debug info
       }
-    } else {
+    }
+    // DISABLED: Automatic return to center when outside boundary
+    /* else {
       // Debug info
       (this.geolocateControl as any)._watchState = 'OFF';
       if ((this.geolocateControl as any)._geolocateButton) {
@@ -237,7 +242,7 @@ export class GeolocationManager {
         bearing: 0,
         duration: 1500,
       });
-    }
+    } */
   }
 
   /**
@@ -371,8 +376,8 @@ export class GeolocationManager {
     });
 
     // Add controls to map
-    this.map.addControl(this.geolocateControl, 'bottom-right');
     this.map.addControl(new window.mapboxgl.NavigationControl(), 'top-right');
+    this.map.addControl(this.geolocateControl, 'top-right');
   }
 
   /**
@@ -765,6 +770,8 @@ export class GeolocationManager {
         self.hideBoundaryLayers();
       }, 200);
 
+      // DISABLED: Automatic teleport back to center after boundary popup
+      /*
       // Fly back to intro animation location
       const finalZoom = window.matchMedia('(max-width: 479px)').matches ? 17 : 18;
 
@@ -778,6 +785,7 @@ export class GeolocationManager {
         essential: true,
         easing: (t: number) => t * (2 - t),
       });
+      */
     }, 3000); // Close after 3 seconds
 
     // Assemble popup
@@ -804,6 +812,8 @@ export class GeolocationManager {
       // Debug info
     }
 
+    // DISABLED: Automatic fly to center when showing boundary popup
+    /*
     // Fly to center to show the boundary (only if not already flying)
     if (!this.map.isMoving() && !this.map.isEasing()) {
       // Debug info
@@ -817,6 +827,7 @@ export class GeolocationManager {
     } else {
       // Debug info
     }
+    */
 
     // Show popup with animation
     requestAnimationFrame(() => {
@@ -834,39 +845,39 @@ export class GeolocationManager {
   public cleanup(): void {
     // Clear all distance markers
     this.clearDistanceMarkers();
-    
+
     // Remove geolocate control
     if (this.geolocateControl) {
       this.map.removeControl(this.geolocateControl);
       this.geolocateControl = undefined;
     }
-    
+
     // Clear all tracked timeouts
-    this.timeouts.forEach(id => clearTimeout(id));
+    this.timeouts.forEach((id) => clearTimeout(id));
     this.timeouts.clear();
-    
+
     // Remove all tracked event listeners
-    this.eventListeners.forEach(({element, event, handler}) => {
+    this.eventListeners.forEach(({ element, event, handler }) => {
       element.removeEventListener(event, handler);
     });
     this.eventListeners.length = 0;
-    
+
     // Remove boundary popup if exists
     if (this.boundaryPopup && this.boundaryPopup.parentNode) {
       this.boundaryPopup.parentNode.removeChild(this.boundaryPopup);
       this.boundaryPopup = undefined;
     }
-    
+
     // Clear map sources
     const sources = [this.searchRadiusId, this.searchRadiusOuterId];
-    sources.forEach(sourceId => {
+    sources.forEach((sourceId) => {
       if (this.map.getSource(sourceId)) {
         this.map.removeSource(sourceId);
       }
     });
-    
+
     // Clear boundary layers
-    this.boundaryLayerIds.forEach(layerId => {
+    this.boundaryLayerIds.forEach((layerId) => {
       if (this.map.getLayer(layerId)) {
         this.map.removeLayer(layerId);
       }
@@ -878,7 +889,7 @@ export class GeolocationManager {
    */
   private clearDistanceMarkers(): void {
     if (this.distanceMarkers.length > 0) {
-      this.distanceMarkers.forEach(marker => marker.remove());
+      this.distanceMarkers.forEach((marker) => marker.remove());
       this.distanceMarkers.length = 0; // Clear array atomically
     }
   }
@@ -888,7 +899,7 @@ export class GeolocationManager {
    */
   private addTrackedEventListener(element: any, event: string, handler: Function): void {
     element.addEventListener(event, handler);
-    this.eventListeners.push({element, event, handler});
+    this.eventListeners.push({ element, event, handler });
   }
 
   /**

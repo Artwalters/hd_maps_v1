@@ -151,11 +151,43 @@ export function setupPopupInteractions(popup: Popup, properties: any, coordinate
       if (cleanupBackFade) cleanupFunctions.push(cleanupBackFade);
     }
 
+    // Beheer opening hours scroll gradients
+    const openingHoursList = popupElement.querySelector('.opening-hours-list') as HTMLElement;
+    const openingHoursContainer = popupElement.querySelector('.popup-opening-hours') as HTMLElement;
+
+    if (openingHoursList && openingHoursContainer) {
+      const checkOpeningHoursScroll = () => {
+        const hasScroll = openingHoursList.scrollHeight > openingHoursList.clientHeight;
+        if (hasScroll) {
+          openingHoursContainer.classList.add('has-scroll');
+        } else {
+          openingHoursContainer.classList.remove('has-scroll');
+        }
+      };
+
+      // Check bij laden
+      setTimeout(checkOpeningHoursScroll, 100);
+
+      // Check bij window resize
+      window.addEventListener('resize', checkOpeningHoursScroll);
+      cleanupFunctions.push(() => window.removeEventListener('resize', checkOpeningHoursScroll));
+    }
+
     // Update fades bij flip
     popupElement.querySelectorAll('.more-info-button').forEach((button) => {
       button.addEventListener('click', () => {
         // Geef wat tijd voor de flip animatie
         setTimeout(() => {
+          // Check opening hours scroll na flip
+          if (openingHoursList && openingHoursContainer && popupWrapper.classList.contains('is-flipped')) {
+            const hasScroll = openingHoursList.scrollHeight > openingHoursList.clientHeight;
+            if (hasScroll) {
+              openingHoursContainer.classList.add('has-scroll');
+            } else {
+              openingHoursContainer.classList.remove('has-scroll');
+            }
+          }
+
           // Update de zichtbare fades
           const isFlipped = popupWrapper.classList.contains('is-flipped');
           const visibleDescription = isFlipped ? backDescription : description;
@@ -237,7 +269,7 @@ export function setupPopupInteractions(popup: Popup, properties: any, coordinate
 
   // Animate popup appearance
   popupContent.style.opacity = '0';
-  popupContent.style.transform = 'rotate(8deg) translateY(40px) scale(0.4)';
+  popupContent.style.transform = 'rotate(8deg) translateY(2.5rem) /* was 40px */ scale(0.4)';
 
   requestAnimationFrame(() => {
     popupContent.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
@@ -335,7 +367,7 @@ export function setupPopupInteractions(popup: Popup, properties: any, coordinate
       // Image popup should only be shown from the main popup, not from AR popups
       if (!properties.link_ar) {
         popupContent.style.transition = 'all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-        popupContent.style.transform = 'rotate(-5deg) translateY(40px) scale(0.6)';
+        popupContent.style.transform = 'rotate(-5deg) translateY(2.5rem) /* was 40px */ scale(0.6)';
         popupContent.style.opacity = '0';
 
         setTimeout(() => {
@@ -359,7 +391,7 @@ export function setupPopupInteractions(popup: Popup, properties: any, coordinate
   popupElement.querySelectorAll('.close-button').forEach((button) => {
     button.addEventListener('click', () => {
       popupContent.style.transition = 'all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-      popupContent.style.transform = 'rotate(-5deg) translateY(40px) scale(0.6)';
+      popupContent.style.transform = 'rotate(-5deg) translateY(2.5rem) /* was 40px */ scale(0.6)';
       popupContent.style.opacity = '0';
 
       // Close any open sidebar items with animation
@@ -367,7 +399,7 @@ export function setupPopupInteractions(popup: Popup, properties: any, coordinate
       if (visibleItem.length) {
         visibleItem.css({
           opacity: '0',
-          transform: 'translateY(40px) scale(0.6)',
+          transform: 'translateY(2.5rem) /* was 40px */ scale(0.6)',
           transition: 'all 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55)',
         });
       }
@@ -409,15 +441,10 @@ export function showImagePopup(properties: any, coordinates: any, contentHeight:
   const isMobile = window.matchMedia('(max-width: 479px)').matches;
 
   const popup = new window.mapboxgl.Popup({
-    offset: {
-      bottom: [0, -5],
-      top: [0, 0],
-      left: [0, 0],
-      right: [0, 0],
-    },
+    offset: [0, -5],
     className: 'custom-popup',
     closeButton: false,
-    maxWidth: '300px',
+    maxWidth: 'none',
     closeOnClick: false,
     anchor: 'bottom',
   });
@@ -467,7 +494,7 @@ export function showImagePopup(properties: any, coordinates: any, contentHeight:
 
   // Animate popup appearance
   popupContent.style.opacity = '0';
-  popupContent.style.transform = 'rotate(8deg) translateY(40px) scale(0.4)';
+  popupContent.style.transform = 'rotate(8deg) translateY(2.5rem) /* was 40px */ scale(0.4)';
 
   requestAnimationFrame(() => {
     popupContent.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
@@ -513,7 +540,7 @@ export function showImagePopup(properties: any, coordinates: any, contentHeight:
   // Handle close button click
   closeButton.addEventListener('click', () => {
     popupContent.style.transition = 'all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-    popupContent.style.transform = 'rotate(-5deg) translateY(40px) scale(0.6)';
+    popupContent.style.transform = 'rotate(-5deg) translateY(2.5rem) /* was 40px */ scale(0.6)';
     popupContent.style.opacity = '0';
 
     setTimeout(() => {
@@ -525,7 +552,7 @@ export function showImagePopup(properties: any, coordinates: any, contentHeight:
   // Handle back button click (return to main popup)
   backButton.addEventListener('click', () => {
     popupContent.style.transition = 'all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-    popupContent.style.transform = 'rotate(-5deg) translateY(40px) scale(0.6)';
+    popupContent.style.transform = 'rotate(-5deg) translateY(2.5rem) /* was 40px */ scale(0.6)';
     popupContent.style.opacity = '0';
 
     setTimeout(async () => {
@@ -534,21 +561,16 @@ export function showImagePopup(properties: any, coordinates: any, contentHeight:
 
       // Create new main popup
       const mainPopup = new window.mapboxgl.Popup({
-        offset: {
-          bottom: [0, -5],
-          top: [0, 0],
-          left: [0, 0],
-          right: [0, 0],
-        },
+        offset: [0, -5],
         className: 'custom-popup',
         closeButton: false,
-        maxWidth: '300px',
+        maxWidth: 'none',
         closeOnClick: false,
         anchor: 'bottom',
       });
 
       const { createPopupContent } = await import('./popups.js');
-      const { styles, html } = createPopupContent(properties);
+      const { styles, html } = createPopupContent(properties, coordinates);
       mainPopup.setLngLat(coordinates).setHTML(`${styles}${html}`);
       mainPopup.addTo((window as any).map);
       setActivePopup(mainPopup);
@@ -559,7 +581,7 @@ export function showImagePopup(properties: any, coordinates: any, contentHeight:
         .getElement()
         .querySelector('.mapboxgl-popup-content') as HTMLElement;
       newPopupContent.style.opacity = '0';
-      newPopupContent.style.transform = 'rotate(8deg) translateY(40px) scale(0.4)';
+      newPopupContent.style.transform = 'rotate(8deg) translateY(2.5rem) /* was 40px */ scale(0.4)';
 
       requestAnimationFrame(() => {
         newPopupContent.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';

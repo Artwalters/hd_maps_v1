@@ -1,10 +1,11 @@
 // Marker management module
 
-import type { Map } from 'mapbox-gl';
 import type { Feature, Point } from 'geojson';
-import { state } from './state.js';
+import type { Map } from 'mapbox-gl';
+
 import { CONFIG } from './config.js';
 import { resourceManager } from './resourceManager.js';
+import { state } from './state.js';
 
 interface LocationFeature extends Feature<Point> {
   properties: {
@@ -24,25 +25,27 @@ const loadingIcons = new Set<string>();
  */
 export async function loadIcons(map: Map): Promise<void> {
   // Get unique icons from features
-  const uniqueIcons = [...new Set(state.mapLocations.features
-    .map((feature) => feature.properties.icon)
-    .filter((icon): icon is string => !!icon) // Filter out null/undefined icons and type guard
-  )];
+  const uniqueIcons = [
+    ...new Set(
+      state.mapLocations.features
+        .map((feature) => feature.properties.icon)
+        .filter((icon): icon is string => !!icon) // Filter out null/undefined icons and type guard
+    ),
+  ];
 
   // Filter out already loaded and currently loading icons
-  const iconsToLoad = uniqueIcons.filter(iconUrl => 
-    !map.hasImage(iconUrl) && !loadingIcons.has(iconUrl)
+  const iconsToLoad = uniqueIcons.filter(
+    (iconUrl) => !map.hasImage(iconUrl) && !loadingIcons.has(iconUrl)
   );
 
   if (iconsToLoad.length === 0) return;
 
   // Mark icons as loading
-  iconsToLoad.forEach(iconUrl => loadingIcons.add(iconUrl));
+  iconsToLoad.forEach((iconUrl) => loadingIcons.add(iconUrl));
 
   // Load icons in parallel with proper error handling
-  const loadPromises = iconsToLoad.map(iconUrl => 
-    loadSingleIcon(map, iconUrl)
-      .finally(() => loadingIcons.delete(iconUrl))
+  const loadPromises = iconsToLoad.map((iconUrl) =>
+    loadSingleIcon(map, iconUrl).finally(() => loadingIcons.delete(iconUrl))
   );
 
   // Wait for all icons to load (or fail)
@@ -66,7 +69,7 @@ async function loadSingleIcon(map: Map, iconUrl: string): Promise<void> {
     // Load image directly for Mapbox compatibility
     const image = await loadImageAsync(iconUrl);
     iconCache.set(iconUrl, image);
-    
+
     if (!map.hasImage(iconUrl)) {
       map.addImage(iconUrl, image);
     }
@@ -212,7 +215,7 @@ function animateMarkerAppearance(map: Map): void {
   let lastFrameTime = 0;
   const targetFPS = 30; // Limit to 30 FPS for better performance
   const frameInterval = 1000 / targetFPS;
-  
+
   const animateMarkers = (currentTime: number): void => {
     // Frame limiting - only update if enough time has passed
     if (currentTime - lastFrameTime < frameInterval) {
@@ -221,13 +224,13 @@ function animateMarkerAppearance(map: Map): void {
       }
       return;
     }
-    
+
     lastFrameTime = currentTime;
     opacity += 0.08; // Slightly slower animation for smoother effect
-    
+
     // Clamp opacity to maximum of 1.0
     const clampedOpacity = Math.min(opacity, 1.0);
-    
+
     // Batch paint property updates for better performance
     try {
       if (map.getLayer('location-markers')) {
@@ -270,7 +273,6 @@ function setupMarkerInteractions(map: Map): void {
  * Update marker visibility based on zoom level
  */
 export function updateMarkerVisibility(map: Map, zoom: number): void {
-  
   // You can add zoom-based visibility logic here if needed
   // For now, the visibility is handled by the interpolation expressions in the layer styles
 }
@@ -281,12 +283,12 @@ export function updateMarkerVisibility(map: Map, zoom: number): void {
 export function createCustomMarker(location: LocationFeature): HTMLDivElement {
   const markerEl = document.createElement('div');
   markerEl.className = 'custom-marker';
-  
+
   // Add location-specific styling if needed
   if (location.properties.color) {
     markerEl.style.backgroundColor = location.properties.color;
   }
-  
+
   return markerEl;
 }
 

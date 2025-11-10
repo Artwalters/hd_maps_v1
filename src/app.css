@@ -1,11 +1,25 @@
-/* 
+/*
  * Mapbox Interactive Application CSS
  * A comprehensive stylesheet for a map-based application
  * with custom markers, popups, and guided tours
  */
 
 /* ==============================
- * CORE LAYOUT & INTERACTION 
+ * FLUID RESPONSIVE BASE
+ * ============================== */
+
+/* Fluid base font-size: 14px op mobile → ~18.67px op desktop (1.33x scaling) */
+html {
+  font-size: clamp(14px, 1.2vw + 0.5rem, 18.67px);
+}
+
+/* Reset voor popup - gebruik de root font-size als basis */
+.mapboxgl-popup-content {
+  font-size: 1rem; /* Zal fluid meeschalen met root */
+}
+
+/* ==============================
+ * CORE LAYOUT & INTERACTION
  * ============================== */
 
 /* Prevent scrolling on main container */
@@ -143,28 +157,42 @@
 
 /* Control positioning */
 .mapboxgl-ctrl-top-right {
-  margin-top: 12em;
-  margin-right: 4rem;
+  margin-top: 10em;
+  margin-right: 1rem;
 }
 
 .mapboxgl-ctrl-bottom-right {
   margin-bottom: 3rem !important;
-  margin-right: 4rem;
+  margin-right: 1rem;
 }
  
 
 /* Responsive adjustments for controls */
+@media screen and (min-width: 1771px) {
+  .mapboxgl-ctrl-top-right {
+    margin-top: 11em;
+    margin-right: 1.5rem;
+  }
+}
+
+@media screen and (min-width: 2560px) {
+  .mapboxgl-ctrl-top-right {
+    margin-top: 11em;
+    margin-right: 2.5rem;
+  }
+}
+
 @media screen and (max-width: 991px) {
   .mapboxgl-ctrl-top-right,
   .mapboxgl-ctrl-bottom-right {
-    margin-right: 3rem;
+    margin-right: 1rem;
   }
 }
 
 @media screen and (max-width: 767px) {
   .mapboxgl-ctrl-top-right {
-    margin-right: 2rem;
-    margin-top: 8rem;
+    margin-right: 1rem;
+    margin-top: 5rem;
   }
   .mapboxgl-ctrl-bottom-right{
     margin-right: 1.5rem;
@@ -175,11 +203,12 @@
 
 @media screen and (max-width: 480px) {
   .mapboxgl-ctrl-top-right {
-    margin-right: 1.5rem;
+    margin-right: 0.5rem;
     margin-top: 8rem;
   }
   .mapboxgl-ctrl-bottom-right{
-    margin-right: 1.5rem;
+    margin-right: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
   }
 }
 /* ==============================
@@ -377,9 +406,9 @@ h3 {
 
 .mapboxgl-popup-content {
   padding: 0 !important;
-  border-radius: 20px !important;
+  border-radius: 1.25rem !important; /* was 20px */
   overflow: visible !important;
-  width: 300px !important;
+  width: clamp(16.25rem, 20vw + 10rem, 25rem) !important; /* ~260px → ~400px fluid */
   background: transparent !important;
   box-shadow: none !important;
   transform-style: preserve-3d !important;
@@ -405,6 +434,8 @@ h3 {
   height: 100%;
   backface-visibility: hidden;
   color: white;
+  display: flex;
+  flex-direction: column;
 }
 
 .popup-front {
@@ -416,7 +447,7 @@ h3 {
 }
 
 .content-wrapper {
-  padding: 30px;
+  padding: 2.5rem 1.875rem 1.875rem 1.875rem; /* top increased */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -432,13 +463,17 @@ h3 {
   line-height: 0.75em;
   text-transform: uppercase;
   text-align: center;
-  margin-top: 1.75em;
+  margin-top: 1.5em;
 }
 
 .popup-title.details {
-  font-size: 2.6em;
-  text-align: left;
-  margin-top: 0.7em;
+  font-family: poppins, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 0;
+  line-height: 1.2;
+  text-transform: none;
 }
 
 .popup-background-image {
@@ -466,19 +501,25 @@ h3 {
   transition: y1 0.5s ease, y2 0.5s ease;
 }
 
+/* Popup description wrapper - relative container for fades */
+.popup-description-wrapper {
+  position: relative;
+  margin-bottom: 3.5em;
+  margin-top: 0.5em;
+  flex-grow: 1;
+  max-height: 12em;
+}
+
 /* Popup description */
 .popup-description {
   font-family: poppins, sans-serif;
-  font-size: 14px;
+  font-size: 0.875rem; /* was 14px */
   line-height: 1.5;
-  margin-bottom: 4em;
-  margin-top: 1em;
-  flex-grow: 1;
+  height: 100%;
   overflow-y: scroll;
-  max-height: 12em;
   text-align: center;
-  padding-right: 15px;
-  margin-right: -15px;
+  padding-right: 0.9375rem; /* was 15px */
+  margin-right: -0.9375rem; /* was -15px */
   -webkit-overflow-scrolling: touch;
   pointer-events: auto !important;
   user-select: none;
@@ -491,7 +532,7 @@ h3 {
 
 .gradient-bottom {
   position: absolute;
-  bottom: 7.9em;
+  bottom: 4em;
   left: 0;
   right: 0;
   height: 1em;
@@ -502,7 +543,7 @@ h3 {
 
 .popup-description-ar {
   font-family: poppins, sans-serif;
-  font-size: 14px;
+  font-size: 0.875rem; /* was 14px */
   margin-bottom: 5em;
   margin-top: 1em;
   text-align: center;
@@ -537,24 +578,24 @@ h3 {
 p {
   color: white;
   font-family: poppins, sans-serif;
-  font-size: 14px;
+  font-size: 0.875rem; /* was 14px */
   line-height: 1.5;
 }
 
 /* Scrollbar styling for popup description */
 .popup-description::-webkit-scrollbar {
-  width: 5px;
+  width: 0.3125rem; /* was 5px */
   background-color: transparent;
 }
 
 .popup-description::-webkit-scrollbar-thumb {
-  border-radius: 10px;
+  border-radius: 0.625rem; /* was 10px */
   background-color: rgba(255, 255, 255, 0.5);
 }
 
 .popup-description::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.4);
-  border-radius: 10px;
+  border-radius: 0.625rem; /* was 10px */
   background-color: transparent;
 }
 
@@ -568,10 +609,11 @@ p {
   border: 1px solid rgba(255,255,255,0.4);
   backdrop-filter: blur(5px);
   color: rgb(255, 255, 255);
-  padding: 7px 20px;
-  border-radius: 30px;
+  padding: 0.4375rem 1.25rem; /* was 7px 20px */
+  border-radius: 0.5rem; /* was 0.75rem - now 8px for sleeker look */
   cursor: pointer;
-  font-size: 14px;
+  font-size: 0.875rem; /* was 14px */
+  text-transform: uppercase;
   transition: all 0.3s ease;
   z-index: 10;
 }
@@ -582,25 +624,25 @@ p {
 }
 
 .impressie-button {
-  bottom: 30px;
-  right: 30px;
+  bottom: 1.875rem; /* was 30px */
+  right: 1.875rem; /* was 30px */
 }
 
 .more-info-button,
 .terug-button {
-  bottom: 30px;
-  left: 30px;
+  bottom: 1.875rem; /* was 30px */
+  left: 1.875rem; /* was 30px */
 }
 
 .close-button {
   position: absolute;
-  top: -18px;
+  top: -1.125rem; /* was -18px */
   left: 50%;
   transform: translateX(-50%);
   background: #333;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  width: 1.5rem; /* was 24px */
+  height: 1.5rem; /* was 24px */
   cursor: pointer;
   z-index: 20;
   padding: 0;
@@ -622,9 +664,9 @@ p {
   content: '';
   position: absolute;
   background-color: white;
-  width: 12px;
-  height: 2px;
-  border-radius: 15px;
+  width: 0.75rem; /* was 12px */
+  height: 0.125rem; /* was 2px */
+  border-radius: 0.9375rem; /* was 15px */
   transition: transform 0.3s ease;
   top: 50%;
   left: 50%;
@@ -648,42 +690,76 @@ margin-top: 1rem;
  * MOBILE ADAPTATIONS
  * ============================== */
 
-@media screen and (max-width: 767px) {
+/* Small laptop screens - slightly bigger than mobile */
+@media screen and (min-width: 768px) and (max-width: 1200px) {
   .mapboxgl-popup-content {
-    width: 260px !important;
+    width: clamp(16rem, 30vw, 19rem) !important; /* ~256px → ~304px */
   }
 
   .popup-title {
-    margin-top: 2.5em;
+    font-size: 3.2em !important;
+  }
+
+  .popup-title.details {
+    font-size: 1.1rem !important;
+  }
+}
+
+/* Large laptops (MacBook 16" etc.) - keep popup compact */
+@media screen and (min-width: 1201px) and (max-width: 1600px) {
+  .mapboxgl-popup-content {
+    width: clamp(17rem, 25vw, 20rem) !important; /* ~272px → ~320px */
+  }
+
+  .popup-title {
+    font-size: 3.5em !important;
+  }
+
+  .popup-title.details {
+    font-size: 1.15rem !important;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .mapboxgl-popup-content {
+    /* Smaller, more compact popup for mobile - closer to original styling */
+    width: clamp(15rem, 85vw, 18rem) !important; /* ~240px → ~288px */
+  }
+
+  .popup-title {
+    margin-top: 2em;
     font-size: 3em !important;
   }
 
+  .popup-title.details {
+    font-size: 1.2rem !important;
+  }
+
   p {
-    font-size: 12px;
+    font-size: 0.875rem; /* was 12px - now same rem, scales with root */
     line-height: 1.5;
   }
 
   .content-wrapper {
-    padding: 25px;
+    padding: 1.875rem; /* was 25px - now same rem value, scales via root font-size */
   }
 
   .popup-description {
     max-height: 9em;
-    margin-top: .75em;
-    margin-bottom: 4em;
-}
+    margin-top: .5em;
+    margin-bottom: 0.3em;
+  }
 
-.popup-description {
-  max-height: 9em;
-  margin-top: .75em;
-  margin-bottom: 4em;
-}
+  .popup-description-wrapper {
+    margin-top: 0.3em;
+    margin-bottom: 2.5em;
+  }
 
 
   .button-base {
-    border-radius: 59px;
-        padding: 5px 16px;
-        font-size: 12px;
+    border-radius: 0.5rem; /* was 0.75rem - now 8px for sleeker look */
+    padding: 0.25rem 0.875rem; /* Smaller on mobile */
+    font-size: 0.75rem; /* Smaller font on mobile */
   }
 }
 
@@ -692,29 +768,140 @@ margin-top: 1rem;
  * ============================== */
 
 .popup-back .content-wrapper {
-  padding: 30px;
+  padding: 1.875rem; /* was 30px */
   color: white;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .info-content {
   margin-top: 0.5em;
+  flex-shrink: 0;
+}
+
+.popup-descriptionv2 {
+  text-align: center;
+  font-family: poppins, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Opening hours styling */
+.popup-opening-hours {
+  position: relative;
+  margin-top: 1em;
+  padding-top: 0.75em;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.opening-hours-title {
+  font-size: 0.9em;
+  font-weight: 600;
+  margin-bottom: 0.5em;
+  text-align: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.opening-hours-fade-top {
+  position: absolute;
+  top: 2.5em;
+  left: 0;
+  right: 0;
+  height: 2em;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.opening-hours-fade-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2em;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Toon gradients alleen wanneer er scrollbare content is */
+.popup-opening-hours.has-scroll .opening-hours-fade-top,
+.popup-opening-hours.has-scroll .opening-hours-fade-bottom {
+  opacity: 1;
+}
+
+.opening-hours-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.625rem; /* was 10px */
+  margin-bottom: 3em;
+}
+
+.opening-hours-list::-webkit-scrollbar {
+  width: 0.3125rem; /* was 5px */
+  background-color: transparent;
+}
+
+.opening-hours-list::-webkit-scrollbar-thumb {
+  border-radius: 0.625rem; /* was 10px */
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.opening-hours-list::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.4);
+  border-radius: 0.625rem; /* was 10px */
+  background-color: transparent;
+}
+
+.opening-hours-list:active {
+  cursor: grabbing;
+}
+
+.opening-hours-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85em;
+  padding: 0;
+  line-height: 1.5;
+}
+
+.opening-hours-row .day-label {
+  font-weight: 500;
+  color: white;
+}
+
+.opening-hours-row .hours-value {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .social-icons {
-  position: absolute;
-  top: 15px;
-  right: 15px;
   display: flex;
-  gap: 10px;
+  gap: 0.625rem; /* was 10px */
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .social-icons a {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 1.75rem; /* was 28px */
+  height: 1.75rem; /* was 28px */
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.8);
   color: #333;
@@ -727,8 +914,8 @@ margin-top: 1rem;
 }
 
 .social-icons svg {
-  width: 16px;
-  height: 16px;
+  width: 1rem; /* was 16px */
+  height: 1rem; /* was 16px */
 }
 
 /* ==============================
@@ -756,8 +943,8 @@ margin-top: 1rem;
 
 .button-container {
   position: absolute;
-  bottom: 30px;
-  right: 30px;
+  bottom: 1.875rem; /* was 30px */
+  right: 1.875rem; /* was 30px */
   z-index: 10;
 }
 
@@ -765,10 +952,11 @@ margin-top: 1rem;
   background: rgba(255,255,255,0.2);
   border: 1px solid rgba(255,255,255,0.4);
   color: white;
-  padding: 7px 20px;
-  border-radius: 30px;
+  padding: 0.4375rem 1.25rem; /* was 7px 20px */
+  border-radius: 0.5rem; /* was 0.75rem - now 8px for sleeker look */
   cursor: pointer;
-  font-size: 14px;
+  font-size: 0.875rem; /* was 14px */
+  text-transform: uppercase;
   backdrop-filter: blur(5px);
   transition: all 0.5s ease;
   font-family: poppins, sans-serif;
@@ -784,10 +972,10 @@ margin-top: 1rem;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 20px 30px;
+  padding: 1.25rem 1.875rem; /* was 20px 30px */
   background: linear-gradient(transparent, rgba(0,0,0,0.7));
   color: white;
-  font-size: 18px;
+  font-size: 1.125rem; /* was 18px */
   font-weight: bold;
   font-family: poppins, sans-serif;
   text-transform: uppercase;
@@ -1501,15 +1689,15 @@ margin-top: 1rem;
 /* Popup Social Icon Styling (Top-Right, Glass Circle) */
 /* ==================================================== */
 
-/* Container (blijft hetzelfde) */
+/* Container - gecentreerd */
 .custom-popup .social-icons {
-  position: absolute;
-  top: 15px;
-  right: 15px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 0.5rem; /* was 8px */
   z-index: 3;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 /* Stijl voor de individuele icon links - Cirkel (blijft hetzelfde) */
@@ -1517,8 +1705,8 @@ margin-top: 1rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 1.875rem; /* was 30px */
+  height: 1.875rem; /* was 30px */
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -1537,8 +1725,8 @@ margin-top: 1rem;
 
 /* Algemene SVG stijl (grootte, geen filter meer) */
 .custom-popup .social-icons svg {
-  width: 16px;
-  height: 16px;
+  width: 1rem; /* was 16px */
+  height: 1rem; /* was 16px */
   filter: none; /* Geen drop shadow */
 }
 

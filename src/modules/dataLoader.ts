@@ -1,7 +1,8 @@
 // Data loading module - loads location data from Webflow
 
-import type { Map } from 'mapbox-gl';
 import type { Feature, Point } from 'geojson';
+import type { Map } from 'mapbox-gl';
+
 import { state } from './state.js';
 
 interface LocationData {
@@ -21,6 +22,13 @@ interface LocationData {
   website: string | null;
   instagram: string | null;
   facebook: string | null;
+  maandag: string;
+  dinsdag: string;
+  woensdag: string;
+  donderdag: string;
+  vrijdag: string;
+  zaterdag: string;
+  zondag: string;
 }
 
 interface ARData {
@@ -55,6 +63,13 @@ interface LocationFeature extends Feature<Point> {
     descriptionv2?: string;
     instagram?: string | null;
     facebook?: string | null;
+    maandag?: string;
+    dinsdag?: string;
+    woensdag?: string;
+    donderdag?: string;
+    vrijdag?: string;
+    zaterdag?: string;
+    zondag?: string;
   };
 }
 
@@ -217,6 +232,13 @@ export function getGeoData(): void {
         website: getRobustValue(element, '#website', 'value', null, false, index, 'location'),
         instagram: getRobustValue(element, '#instagram', 'value', null, false, index, 'location'),
         facebook: getRobustValue(element, '#facebook', 'value', null, false, index, 'location'),
+        maandag: getRobustValue(element, '#maandag', 'value', '', false, index, 'location'),
+        dinsdag: getRobustValue(element, '#dinsdag', 'value', '', false, index, 'location'),
+        woensdag: getRobustValue(element, '#woensdag', 'value', '', false, index, 'location'),
+        donderdag: getRobustValue(element, '#donderdag', 'value', '', false, index, 'location'),
+        vrijdag: getRobustValue(element, '#vrijdag', 'value', '', false, index, 'location'),
+        zaterdag: getRobustValue(element, '#zaterdag', 'value', '', false, index, 'location'),
+        zondag: getRobustValue(element, '#zondag', 'value', '', false, index, 'location'),
       };
 
       // --- Create Feature ---
@@ -242,6 +264,13 @@ export function getGeoData(): void {
           descriptionv2: locationData.descriptionv2,
           instagram: locationData.instagram,
           facebook: locationData.facebook,
+          maandag: locationData.maandag,
+          dinsdag: locationData.dinsdag,
+          woensdag: locationData.woensdag,
+          donderdag: locationData.donderdag,
+          vrijdag: locationData.vrijdag,
+          zaterdag: locationData.zaterdag,
+          zondag: locationData.zondag,
         },
       };
 
@@ -256,7 +285,6 @@ export function getGeoData(): void {
         skippedCount++;
       }
     });
-
 }
 
 /**
@@ -403,21 +431,18 @@ export function getARData(): void {
       state.mapLocations.features.push(feature);
       loadedCount++;
     });
-
 }
 
 /**
  * Main function to load all location data
  */
 export async function loadLocationData(): Promise<typeof state.mapLocations> {
-
   // Reset mapLocations in case this script runs multiple times
   state.mapLocations.features = [];
 
   // Load both types of data
   getGeoData();
   getARData();
-
 
   // Return the loaded data
   return state.mapLocations;

@@ -16,7 +16,7 @@ export class ResourceManager {
   private textureCache = new Map<string, any>();
   private loadingPromises = new Map<string, Promise<any>>();
   private failedResources = new Set<string>();
-  
+
   // Performance tracking
   private loadTimes = new Map<string, number>();
   private loadCounts = new Map<string, number>();
@@ -34,11 +34,11 @@ export class ResourceManager {
    * Load and optimize an image with caching
    */
   async loadOptimizedImage(
-    url: string, 
+    url: string,
     options: ResourceLoadOptions = {}
   ): Promise<HTMLImageElement> {
     const { maxSize = 512, timeout = 10000 } = options;
-    
+
     // Check failed resources first
     if (this.failedResources.has(url)) {
       throw new Error(`Resource previously failed to load: ${url}`);
@@ -76,14 +76,14 @@ export class ResourceManager {
    * Load image with size optimization and timeout
    */
   private loadImageWithOptimization(
-    url: string, 
-    maxSize: number, 
+    url: string,
+    maxSize: number,
     timeout: number
   ): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
-      
+
       const timeoutId = setTimeout(() => {
         img.src = ''; // Cancel loading
         reject(new Error(`Image load timeout: ${url}`));
@@ -91,7 +91,7 @@ export class ResourceManager {
 
       img.onload = () => {
         clearTimeout(timeoutId);
-        
+
         // Check if resizing is needed
         if (Math.max(img.width, img.height) > maxSize) {
           resolve(this.resizeImage(img, maxSize));
@@ -115,15 +115,15 @@ export class ResourceManager {
   private resizeImage(img: HTMLImageElement, maxSize: number): HTMLImageElement {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d')!;
-    
+
     // Calculate new dimensions
     const scale = Math.min(maxSize / img.width, maxSize / img.height);
     canvas.width = img.width * scale;
     canvas.height = img.height * scale;
-    
+
     // Draw resized image
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    
+
     // Create new image from canvas
     const resizedImg = new Image();
     resizedImg.src = canvas.toDataURL('image/jpeg', 0.85);
@@ -181,7 +181,7 @@ export class ResourceManager {
       if (child.isMesh) {
         // Enable frustum culling
         child.frustumCulled = true;
-        
+
         // Optimize materials
         if (child.material) {
           // Reduce material precision for better performance
@@ -200,14 +200,14 @@ export class ResourceManager {
   async preloadResources(urls: string[]): Promise<void> {
     const batchSize = 3; // Load 3 resources at a time
     const batches: string[][] = [];
-    
+
     for (let i = 0; i < urls.length; i += batchSize) {
       batches.push(urls.slice(i, i + batchSize));
     }
 
     for (const batch of batches) {
-      const promises = batch.map(url => 
-        this.loadOptimizedImage(url).catch(() => null) // Continue on error
+      const promises = batch.map(
+        (url) => this.loadOptimizedImage(url).catch(() => null) // Continue on error
       );
       await Promise.all(promises);
     }
@@ -222,7 +222,7 @@ export class ResourceManager {
     this.modelCache.clear();
     this.textureCache.clear();
     this.loadingPromises.clear();
-    
+
     // Clear tracking
     this.loadTimes.clear();
     this.loadCounts.clear();
@@ -240,12 +240,12 @@ export class ResourceManager {
   } {
     const totalLoadTime = Array.from(this.loadTimes.values()).reduce((a, b) => a + b, 0);
     const totalLoads = this.loadTimes.size;
-    
+
     return {
       cachedImages: this.imageCache ? -1 : 0, // WeakMap size not accessible
       cachedModels: this.modelCache.size,
       failedResources: this.failedResources.size,
-      averageLoadTime: totalLoads > 0 ? totalLoadTime / totalLoads : 0
+      averageLoadTime: totalLoads > 0 ? totalLoadTime / totalLoads : 0,
     };
   }
 

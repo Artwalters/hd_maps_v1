@@ -56,6 +56,7 @@ declare global {
 // Initialize when Webflow is ready
 window.Webflow ||= [];
 window.Webflow.push(async (): Promise<void> => {
+  console.log('🚀 LOCALHOST SCRIPT LOADED - Development server is active!');
 
   try {
     // Initialize map
@@ -72,7 +73,7 @@ window.Webflow.push(async (): Promise<void> => {
     setupMapLoadHandler(map);
     setupMapInteractionHandlers(map);
     setupSidebarHandlers();
-    setupBoundaryCheck(map);
+    // setupBoundaryCheck(map); // Moved to Webflow custom code
     setupPOIFiltering(map);
     setupThreeJSLayer(map);
     initialize3DSettings(map);
