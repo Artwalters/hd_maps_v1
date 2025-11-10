@@ -25,4 +25,4 @@ typings/
 .env
 
 # Production files
-dist
+# dist - commented out to allow dist folder in repository
