@@ -75,36 +75,31 @@ export function setupMapLoadHandler(map: Map): void {
         setupLocationFilters();
       });
 
-    // Initial animation on load - Configurable via window.HEERLEN_MAP_CONFIG
-    console.log('🎬 Intro animation enabled:', CONFIG.INTRO_ANIMATION.enabled);
-    if (CONFIG.INTRO_ANIMATION.enabled) {
-      console.log('🎬 Starting intro animation in', CONFIG.INTRO_ANIMATION.delay, 'ms');
-      setTimeout(() => {
-        // Use mobile-specific zoom if needed, otherwise use config
-        const finalZoom = window.matchMedia('(max-width: 479px)').matches
-          ? Math.max(CONFIG.INTRO_ANIMATION.endZoom - 0.5, 14)
-          : CONFIG.INTRO_ANIMATION.endZoom;
-
-        // Start position (bird's eye view)
-        map.jumpTo({
-          center: CONFIG.INTRO_ANIMATION.startCoords,
-          zoom: CONFIG.INTRO_ANIMATION.startZoom,
-          pitch: CONFIG.INTRO_ANIMATION.startPitch,
-          bearing: CONFIG.INTRO_ANIMATION.startBearing,
-        });
-
-        // Fly to destination with camera rotation
-        map.flyTo({
-          center: CONFIG.INTRO_ANIMATION.endCoords,
-          zoom: finalZoom,
-          pitch: CONFIG.INTRO_ANIMATION.endPitch,
-          bearing: CONFIG.INTRO_ANIMATION.endBearing,
-          duration: CONFIG.INTRO_ANIMATION.duration,
-          essential: true,
-          easing: (t: number) => t * (2 - t), // Ease out quad
-        });
-      }, CONFIG.INTRO_ANIMATION.delay);
-    }
+    // Initial animation on load - DISABLED
+    // setTimeout(() => {
+    //   const finalZoom = window.matchMedia('(max-width: 479px)').matches ? 16.5 : 17;
+    //   const stationCoords: [number, number] = [5.975338618538545, 50.89054201081809];
+    //   const destinationCoords: [number, number] = [5.977246733617121, 50.888996872875126];
+    //
+    //   // Start position at station (bird's eye view)
+    //   map.jumpTo({
+    //     center: stationCoords,
+    //     zoom: 14,
+    //     pitch: 0,
+    //     bearing: 0,
+    //   });
+    //
+    //   // Fly to destination with camera rotation (180 degrees rotated)
+    //   map.flyTo({
+    //     center: destinationCoords,
+    //     zoom: finalZoom,
+    //     pitch: 35,
+    //     bearing: 162.4, // -17.6 + 180 = 162.4
+    //     duration: 6000,
+    //     essential: true,
+    //     easing: (t: number) => t * (2 - t), // Ease out quad
+    //   });
+    // }, 3000); // Start animatie na 3 seconden
   });
 }
 

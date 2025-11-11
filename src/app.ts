@@ -73,7 +73,7 @@ window.Webflow.push(async (): Promise<void> => {
     setupMapLoadHandler(map);
     setupMapInteractionHandlers(map);
     setupSidebarHandlers();
-    setupBoundaryCheck(map); // Configurable via window.HEERLEN_MAP_CONFIG
+    // setupBoundaryCheck(map); // Disabled - not used
     setupPOIFiltering(map);
     setupThreeJSLayer(map);
     initialize3DSettings(map);
