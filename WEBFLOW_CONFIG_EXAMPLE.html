@@ -1,0 +1,98 @@
+<!-- =====================================
+  HEERLEN MAP - WEBFLOW CONFIGURATIE
+  Plaats deze code in Webflow:
+  Page Settings > Custom Code > Before </body> tag
+  ===================================== -->
+
+<!-- 1. Laad het main script vanaf GitHub CDN -->
+<script src="https://cdn.jsdelivr.net/gh/Artwalters/HD_maps_all@main/app.js"></script>
+
+<!-- 2. Configuratie - Pas deze waardes aan -->
+<script>
+  // Stel configuratie in VOOR de map geladen wordt
+  window.HEERLEN_MAP_CONFIG = {
+
+    // Start positie en camera instellingen
+    startPosition: {
+      center: [5.979642, 50.887634],  // [longitude, latitude]
+      zoom: 15.5,                      // Zoom level (10-20)
+      pitch: 45,                       // Camera hoek (0-85 graden)
+      bearing: -17.6                   // Rotatie (-180 tot 180 graden)
+    },
+
+    // Navigatie grenzen (boundary)
+    boundary: {
+      center: [5.977105864037915, 50.88774161029858],  // [longitude, latitude]
+      radius: 0.6  // Radius in kilometers
+    },
+
+    // Animatie instellingen
+    animation: {
+      speed: 0.8,      // Animatie snelheid (0.2 = langzaam, 2 = snel)
+      duration: 2000   // Animatie duur in milliseconden (2000 = 2 seconden)
+    }
+  };
+</script>
+
+<!-- =====================================
+  VOORBEELD CONFIGURATIES
+  Kopieer en pas aan naar wens
+  ===================================== -->
+
+<!-- VOORBEELD 1: Langzamere animaties -->
+<!--
+<script>
+  window.HEERLEN_MAP_CONFIG = {
+    startPosition: {
+      center: [5.979642, 50.887634],
+      zoom: 15.5,
+      pitch: 45,
+      bearing: -17.6
+    },
+    boundary: {
+      center: [5.977105864037915, 50.88774161029858],
+      radius: 0.6
+    },
+    animation: {
+      speed: 0.4,      // Langzamere animatie
+      duration: 3000   // 3 seconden
+    }
+  };
+</script>
+-->
+
+<!-- VOORBEELD 2: Andere start positie -->
+<!--
+<script>
+  window.HEERLEN_MAP_CONFIG = {
+    startPosition: {
+      center: [5.980000, 50.888000],  // Andere coördinaten
+      zoom: 16,                        // Meer ingezoomd
+      pitch: 60,                       // Steilere hoek
+      bearing: 0                       // Geen rotatie
+    },
+    boundary: {
+      center: [5.977105864037915, 50.88774161029858],
+      radius: 0.8  // Grotere radius (800 meter)
+    },
+    animation: {
+      speed: 1.2,      // Snellere animatie
+      duration: 1500   // 1.5 seconden
+    }
+  };
+</script>
+-->
+
+<!-- VOORBEELD 3: Alleen start positie aanpassen (rest blijft default) -->
+<!--
+<script>
+  window.HEERLEN_MAP_CONFIG = {
+    startPosition: {
+      center: [5.979642, 50.887634],
+      zoom: 14,  // Alleen zoom aanpassen
+      pitch: 30  // Alleen pitch aanpassen
+    }
+    // boundary en animation gebruiken default waardes
+  };
+</script>
+-->

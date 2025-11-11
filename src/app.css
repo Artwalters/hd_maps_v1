@@ -98,7 +98,7 @@ html {
 .mapboxgl-ctrl-group {
   background: white!important;
   border: 1.5px solid black !important;
-  border-radius: 25px !important;
+  border-radius: 0.375rem !important; /* 6px - iets scherper op desktop */
   position: relative;
   overflow: hidden;
 }
@@ -126,6 +126,7 @@ html {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  border-radius: 0.25rem !important; /* 4px - iets scherper op desktop */
 }
 
 .mapboxgl-ctrl-group:not(:empty) {
@@ -209,6 +210,41 @@ html {
   .mapboxgl-ctrl-bottom-right{
     margin-right: 0.5rem !important;
     margin-bottom: 0.5rem !important;
+  }
+
+  /* Control buttons nog kleiner op zeer kleine schermen */
+  .mapboxgl-ctrl-group button {
+    width: 1.25rem !important; /* 20px */
+    height: 1.25rem !important; /* 20px */
+    border-radius: 0.1875rem !important; /* 3px - vierkant met kleine afronding */
+  }
+
+  .mapboxgl-ctrl-group {
+    border-radius: 0.25rem !important; /* 4px - iets scherper */
+  }
+
+  .help-button-container {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin-top: 0.875rem !important; /* 14px ruimte tussen controls */
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .help-button {
+    width: 1.25rem !important; /* 20px */
+    height: 1.25rem !important; /* 20px */
+    font-size: 0.875rem !important;
+    border: 1.5px solid black !important;
+    background: white !important;
+    display: flex !important;
+    border-radius: 0.1875rem !important; /* 3px - iets scherper */
+  }
+
+  .mapboxgl-ctrl-icon {
+    background-size: 1.125rem !important; /* 18px - icons groter */
   }
 }
 /* ==============================
@@ -727,7 +763,7 @@ margin-top: 1rem;
 
 @media screen and (max-width: 767px) {
   .mapboxgl-popup-content {
-    width: clamp(13rem, 82vw, 15.5rem) !important; /* ~208px → ~248px - compacter op mobile */
+    width: clamp(15.6rem, 82vw, 18.6rem) !important; /* ~250px → ~298px - 20% groter op mobile */
   }
 
   .popup-title {
@@ -746,6 +782,41 @@ margin-top: 1rem;
 
   .content-wrapper {
     padding: 1.5rem; /* Compacter op mobile */
+  }
+
+  /* Control buttons kleiner op mobile */
+  .mapboxgl-ctrl-group button {
+    width: 1.5rem !important; /* 24px */
+    height: 1.5rem !important; /* 24px */
+    border-radius: 0.1875rem !important; /* 3px - vierkant met kleine afronding */
+  }
+
+  .mapboxgl-ctrl-group {
+    border-radius: 0.3125rem !important; /* 5px - iets scherper */
+  }
+
+  .help-button-container {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin-top: 1.5rem !important; /* 24px ruimte tussen controls */
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .help-button {
+    width: 1.5rem !important; /* 24px */
+    height: 1.5rem !important; /* 24px */
+    font-size: 1rem !important;
+    border: 1.5px solid black !important;
+    background: white !important;
+    display: flex !important;
+    border-radius: 0.1875rem !important; /* 3px - iets scherper op mobile */
+  }
+
+  .mapboxgl-ctrl-icon {
+    background-size: 1.375rem !important; /* 22px - icons groter */
   }
 
   .popup-description {
@@ -1564,22 +1635,41 @@ margin-top: 1rem;
  * HELP BUTTON
  * ============================== */
 
+.mapboxgl-ctrl-help, .mapboxgl-ctrl-top-right .mapboxgl-ctrl:not(.mapboxgl-ctrl-group) {
+  margin: 10px 0.5px 0px 0 !important;
+}
+
+.help-button-container {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  display: block !important; /* Zorg dat het zichtbaar is */
+  opacity: 1 !important;
+  visibility: visible !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.help-button-container::before {
+  display: none !important; /* Geen texture overlay */
+}
+
 .help-button {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: white;
-  border: 1px solid #ddd;
+  width: 31px;
+  height: 31px;
+  border-radius: 0.25rem; /* 4px - iets scherper */
+  background: white !important;
+  border: 1.5px solid black !important;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 17px;
+  line-height: 1;
   cursor: pointer;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
   padding: 0;
   margin: 0;
-  padding-top: 10px;
   color: #333;
 }
 

@@ -254,11 +254,11 @@ function showWelcomeMessage(callback: () => void): void {
 function addHelpButton(map: Map): void {
   const lang = detectLanguage();
   const t = translations[lang];
-  
+
   // Remove existing help button if any
-  const existingButton = document.querySelector('.help-button');
-  if (existingButton) {
-    existingButton.remove();
+  const existingContainer = document.querySelector('.help-button-container');
+  if (existingContainer) {
+    existingContainer.remove();
   }
 
   const helpButton = document.createElement('button');
@@ -286,7 +286,7 @@ function addHelpButton(map: Map): void {
   const controlContainer = document.querySelector('.mapboxgl-ctrl-top-right');
   if (controlContainer) {
     const helpControl = document.createElement('div');
-    helpControl.className = 'mapboxgl-ctrl mapboxgl-ctrl-group help-button-container';
+    helpControl.className = 'mapboxgl-ctrl help-button-container';
     helpControl.appendChild(helpButton);
     controlContainer.appendChild(helpControl);
   }
@@ -674,42 +674,57 @@ export function startTour(map: Map): void {
           }
         }
       },
+      hide: disableOverlay,
     },
   });
 
   // Add the heart favorites step - minimalist style
-  tour.addStep({
-    id: 'like-heart-svg',
-    attachTo: safelyGetElement('.heart-svg.w-embed', '.like-heart-svg'),
-    text: t.tourSteps.likeHeart,
-    buttons: [
-      {
-        text: t.buttons.back,
-        action: tour.back,
-        classes: 'shepherd-button-secondary',
-      },
-      {
-        text: t.buttons.next,
-        action: tour.next,
-        classes: 'shepherd-button-primary',
-      },
-    ],
-    when: {
-      show: enableOverlay,
-      hide: () => {
-        // Pulse the target element when showing the step
-        const target = document.querySelector('.heart-svg.w-embed');
-        if (target) {
-          target.classList.add('tour-highlight-pulse');
+  // Debug: check if elements exist
+  const jetboostElement = document.querySelector('.jetboost-favorites-total');
+  const heartSvgElement = document.querySelector('.heart-svg.w-embed');
+  console.log('🔍 Checking heart elements:');
+  console.log('  .jetboost-favorites-total:', jetboostElement);
+  console.log('  .heart-svg.w-embed:', heartSvgElement);
 
-          // Remove pulse after animation completes
-          setTimeout(() => {
-            target.classList.remove('tour-highlight-pulse');
-          }, 1000);
-        }
+  const heartAttachment = safelyGetElement('.jetboost-favorites-total', '.heart-svg.w-embed');
+  console.log('Heart attachment result:', heartAttachment);
+
+  if (heartAttachment) {
+    console.log('✅ Adding heart step to tour');
+    tour.addStep({
+      id: 'like-heart-svg',
+      attachTo: heartAttachment,
+      text: t.tourSteps.likeHeart,
+      buttons: [
+        {
+          text: t.buttons.back,
+          action: tour.back,
+          classes: 'shepherd-button-secondary',
+        },
+        {
+          text: t.buttons.next,
+          action: tour.next,
+          classes: 'shepherd-button-primary',
+        },
+      ],
+      when: {
+        show: () => {
+          enableOverlay();
+          // Pulse the target element when showing the step
+          const target = document.querySelector('.jetboost-favorites-total');
+          if (target) {
+            target.classList.add('tour-highlight-pulse');
+
+            // Remove pulse after animation completes
+            setTimeout(() => {
+              target.classList.remove('tour-highlight-pulse');
+            }, 1000);
+          }
+        },
+        hide: disableOverlay,
       },
-    },
-  });
+    });
+  }
 
   // Final step - minimalist style
   tour.addStep({

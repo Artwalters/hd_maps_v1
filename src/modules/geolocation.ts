@@ -186,7 +186,7 @@ export class GeolocationManager {
             center: userPosition,
             zoom: 17.5,
             pitch: 45,
-            duration: 2000,
+            duration: CONFIG.ANIMATION.duration,
             bearing: position.coords.heading || 0,
           });
           this.isFirstLocation = false;

@@ -72,7 +72,7 @@ export function setupBoundaryCheck(map: Map): void {
         zoom: 17,
         pitch: 45,
         bearing: -17.6,
-        speed: 0.8,
+        speed: CONFIG.ANIMATION.speed,
         curve: 1.5,
         essential: true,
       });
