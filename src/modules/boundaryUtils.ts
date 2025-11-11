@@ -40,9 +40,12 @@ export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2
  */
 export function setupBoundaryCheck(map: Map): void {
   // Only setup boundary check if teleport is enabled
+  console.log('🔄 Teleport enabled:', CONFIG.TELEPORT.enabled, 'Max distance:', CONFIG.TELEPORT.maxDistance, 'km');
   if (!CONFIG.TELEPORT.enabled) {
+    console.log('🔄 Teleport disabled, skipping boundary check');
     return;
   }
+  console.log('🔄 Setting up boundary check with teleport');
 
   map.on('moveend', () => {
     // Skip this check if we're flying back

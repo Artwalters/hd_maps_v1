@@ -76,7 +76,9 @@ export function setupMapLoadHandler(map: Map): void {
       });
 
     // Initial animation on load - Configurable via window.HEERLEN_MAP_CONFIG
+    console.log('🎬 Intro animation enabled:', CONFIG.INTRO_ANIMATION.enabled);
     if (CONFIG.INTRO_ANIMATION.enabled) {
+      console.log('🎬 Starting intro animation in', CONFIG.INTRO_ANIMATION.delay, 'ms');
       setTimeout(() => {
         // Use mobile-specific zoom if needed, otherwise use config
         const finalZoom = window.matchMedia('(max-width: 479px)').matches

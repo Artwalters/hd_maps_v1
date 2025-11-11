@@ -151,8 +151,11 @@ function getMergedConfig(): {
   const customConfig = window.HEERLEN_MAP_CONFIG;
 
   if (!customConfig) {
+    console.log('📍 No custom config found, using defaults');
     return DEFAULT_CONFIG;
   }
+
+  console.log('📍 Custom config found:', customConfig);
 
   return {
     MAP: {
